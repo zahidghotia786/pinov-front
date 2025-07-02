@@ -123,7 +123,7 @@ const OrderForm = () => {
       // Handle specific error cases
       if (err.response?.status === 403) {
         // KYC not verified
-        navigate('/kyc-verification');
+        navigate('/kyc-start');
       } else if (err.response?.status === 401) {
         // Unauthorized
         navigate('/login');

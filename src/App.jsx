@@ -19,6 +19,7 @@ import Footer from './Components/Footer';
 import KYCVerification from './Components/KYCVerification';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OrderTable from './Components/OrderTable';
+import VerifiyPassowrd from './Components/Auth/VerifiyPassowrd';
 
 // Define a component that checks the location and conditionally renders Navbar
 function NavbarCondition() {
@@ -58,6 +59,7 @@ function App() {
               <Route path="/order-table" element={<OrderTable />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route path="/verify-email/:token" element={<VerifiyPassowrd />} />
 
               {/* Private Routes */}
               <Route path="/dashboard" element={<PrivateRoute />}>

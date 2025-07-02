@@ -40,6 +40,7 @@ export const loginUser = async (email, password) => {
 };
 
 export const registerUser = async (userData) => {
+  console.log(userData)
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userData);
     
@@ -63,11 +64,17 @@ export const registerUser = async (userData) => {
 
 export const logoutUser = async () => {
   try {
-    await api.get('/auth/logout');
+    // Clear user data from localStorage and sessionStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user'); // If stored
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+    
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Logout failed');
   }
 };
+
 
 
 export const resetPassword = async (email, newPassword, token) => {
