@@ -148,12 +148,12 @@ const SavedKYCToken = () => {
     setIsModalOpen(true);
   };
 
+  const kycStatus = kycData.kyc?.status
   const DocumentCard = () => {
     if (!kycData) return null;
 
     const config = getStatusInfo(kycData.kyc?.status);
     const token = kycData.kyc.token?.token;
-    const kycStatus = kycData.kyc?.status
 
     return (
       <div className={`group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border-2 ${config.borderClass} overflow-hidden`}>
