@@ -9,6 +9,10 @@ export default function KYCVerification() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
+
+
+
+
   // Function to fetch a new access token from your backend
   const getNewAccessToken = async () => {
     const userToken = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -62,10 +66,10 @@ export default function KYCVerification() {
       const result = await response.json();
 
       if (response.ok) {
-        console.log( result);
+        console.log(result);
         toast.success('KYC verification status updated!');
       } else {
-        console.error( result);
+        console.error(result);
         toast.error('Failed to update KYC status');
       }
     } catch (error) {
@@ -109,10 +113,10 @@ export default function KYCVerification() {
         // NEW: Enhanced handling of status changes
         .on('idCheck.onApplicantStatusChanged', async (payload) => {
           console.log('SDK message: idCheck.onApplicantStatusChanged', payload);
-          
+
           // Extract the applicant ID from session storage or payload
           const applicantId = sessionStorage.getItem('currentApplicantId') || payload.applicantId;
-          
+
           if (applicantId && payload.reviewResult) {
             // Save the complete status data to backend
             await saveKycStatus(applicantId, {
@@ -155,10 +159,14 @@ export default function KYCVerification() {
     }
   };
 
-  useEffect(() => {
-    launchWebSdk();
 
-    // Cleanup on unmount
+  useEffect(() => {
+    if (!showLoginModal) {
+      launchWebSdk();
+    }
+  }, [showLoginModal]);
+
+  useEffect(() => {
     return () => {
       if (sdkInstanceRef.current) {
         sdkInstanceRef.current.destroy();
@@ -223,11 +231,14 @@ export default function KYCVerification() {
       ) : (
         <>
           <h2 className="text-xl font-semibold mb-4 text-white">KYC Verification</h2>
-          <div
-            ref={containerRef}
-            id="sumsub-websdk-container"
-            style={{ width: '100%', minHeight: '600px', background: 'white' }}
-          ></div>
+          {!showLoginModal && (
+            <div
+              ref={containerRef}
+              id="sumsub-websdk-container"
+              style={{ width: '100%', minHeight: '600px', background: 'white' }}
+            ></div>
+          )}
+
         </>
       )}
     </div>
