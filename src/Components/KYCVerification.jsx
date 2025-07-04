@@ -12,30 +12,41 @@ export default function KYCVerification() {
 
 
 
-
-  // Function to fetch a new access token from your backend
-  const getNewAccessToken = async () => {
-    const userToken = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!userToken) {
+  useEffect(() => {
+  const checkAndLaunch = async () => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) {
       setShowLoginModal(true);
       setLoading(false);
-      throw new Error('No user token available');
+      return;
     }
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/kyc/token`, {
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-      },
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || !data.token) {
-      throw new Error('Failed to fetch new access token');
-    }
-
-    return data.token;
+    await launchWebSdk(); // safe to run now
   };
+
+  checkAndLaunch();
+}, []);
+
+
+
+  // Function to fetch a new access token from your backend
+const getNewAccessToken = async () => {
+  const userToken = localStorage.getItem('token') || sessionStorage.getItem('token');
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/kyc/token`, {
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.token) {
+    throw new Error('Failed to fetch new access token');
+  }
+
+  return data.token;
+};
+
 
   // NEW: Function to save KYC status to backend
   const saveKycStatus = async (applicantId, statusData) => {
