@@ -5,12 +5,11 @@ import { toast } from 'react-toastify';
 
 
 const SavedKYCToken = () => {
-  
+
   // Mock Loader component
   const Loader = ({ size }) => (
-    <div className={`animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 ${
-      size === 'large' ? 'w-12 h-12' : 'w-8 h-8'
-    }`}></div>
+    <div className={`animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 ${size === 'large' ? 'w-12 h-12' : 'w-8 h-8'
+      }`}></div>
   );
   const [kycData, setKycData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,9 +30,9 @@ const SavedKYCToken = () => {
             'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming token is stored in localStorage
           }
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
           setKycData(data.data);
         } else {
@@ -151,36 +150,43 @@ const SavedKYCToken = () => {
 
   const DocumentCard = () => {
     if (!kycData) return null;
-    
+
     const config = getStatusInfo(kycData.kyc?.status);
     const token = kycData.kyc.token?.token;
+    const kycStatus = kycData.kyc?.status
 
     return (
       <div className={`group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border-2 ${config.borderClass} overflow-hidden`}>
         <div className={`h-2 ${config.bgClass.replace('from-', 'from-').replace('to-', 'to-')}`}></div>
-        
+
         <div className="p-6">
-          {token && (
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-2 overflow-x-scroll">
-                <Hash className="w-5 h-5 text-gray-400" />
-                <span className="font-mono text-lg font-semibold text-gray-900 tracking-wide ">
-                  {token}
-                </span>
-              </div>
-              <button
-                onClick={() => copyToken(token)}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors group/copy"
-                title="Copy token"
-              >
-                <Copy className={`w-4 h-4 transition-colors ${
-                  copiedToken === token 
-                    ? 'text-green-600' 
-                    : 'text-gray-400 group-hover/copy:text-gray-600'
-                }`} />
-              </button>
-            </div>
-          )}
+{(token && kycStatus === "verified") ? (
+  <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center space-x-2 overflow-x-scroll">
+      <Hash className="w-5 h-5 text-gray-400" />
+      <span className="font-mono text-lg font-semibold text-gray-900 tracking-wide ">
+        {token}
+      </span>
+    </div>
+    <button
+      onClick={() => copyToken(token)}
+      className="p-2 rounded-lg hover:bg-gray-100 transition-colors group/copy"
+      title="Copy token"
+    >
+      <Copy
+        className={`w-4 h-4 transition-colors ${
+          copiedToken === token
+            ? 'text-green-600'
+            : 'text-gray-400 group-hover/copy:text-gray-600'
+        }`}
+      />
+    </button>
+  </div>
+) : (
+  <div className="mb-4 text-gray-400 text-sm">No token yet</div>
+)}
+
+
 
           <div className="space-y-3 mb-4">
             <div className="flex items-center text-gray-600">
@@ -189,7 +195,7 @@ const SavedKYCToken = () => {
                 KYC Verification
               </span>
             </div>
-            
+
             <div className="text-sm text-gray-500 bg-gray-50 px-3 py-2 rounded-lg">
               <span className="font-medium">Level:</span> {kycData.kyc?.levelName || 'N/A'}
             </div>
@@ -197,15 +203,15 @@ const SavedKYCToken = () => {
 
           <div className="flex items-center justify-between">
             <StatusBadge status={kycData.kyc?.status || 'not_started'} />
-            
+
             <div className="flex items-center text-sm text-gray-500">
               <Calendar className="w-4 h-4 mr-1" />
-              {kycData.kyc?.lastUpdated 
+              {kycData.kyc?.lastUpdated
                 ? new Date(kycData.kyc.lastUpdated).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                })
                 : 'N/A'}
             </div>
           </div>
@@ -229,25 +235,23 @@ const SavedKYCToken = () => {
                 Track your document verification status
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-2 bg-white/10 rounded-xl p-1">
               <button
                 onClick={() => setViewMode('table')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  viewMode === 'table' 
-                    ? 'bg-white text-indigo-600 shadow-lg' 
-                    : 'text-white hover:bg-white/10'
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${viewMode === 'table'
+                  ? 'bg-white text-indigo-600 shadow-lg'
+                  : 'text-white hover:bg-white/10'
+                  }`}
               >
                 Table
               </button>
               <button
                 onClick={() => setViewMode('cards')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  viewMode === 'cards' 
-                    ? 'bg-white text-indigo-600 shadow-lg' 
-                    : 'text-white hover:bg-white/10'
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${viewMode === 'cards'
+                  ? 'bg-white text-indigo-600 shadow-lg'
+                  : 'text-white hover:bg-white/10'
+                  }`}
               >
                 Cards
               </button>
@@ -317,24 +321,28 @@ const SavedKYCToken = () => {
                   <tbody className="bg-white divide-y divide-gray-100">
                     <tr className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 transition-all duration-200">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {kycData.kyc?.token?.token ? (
-                          <div className="flex items-center space-x-2 ">
+                        {(kycData?.kyc?.token?.token && kycStatus === "verified") ? (
+                          <div className="flex items-center space-x-2">
                             <span className="font-mono overflow-x-scroll w-[150px] text-sm font-semibold text-gray-900 bg-gray-100 px-3 py-1 rounded-lg">
-                              {kycData.kyc?.token?.token}
+                              {kycData.kyc.token.token}
                             </span>
                             <button
-                              onClick={() => copyToken(kycData?.kyc?.token?.token)}
+                              onClick={() => copyToken(kycData.kyc.token.token)}
                               className="p-1 rounded hover:bg-gray-200 transition-colors"
                               title="Copy token"
                             >
-                              <Copy className={`w-3 h-3 ${
-                                copiedToken === kycData?.kyc?.token?.token ? 'text-green-600' : 'text-gray-400'
-                              }`} />
+                              <Copy
+                                className={`w-3 h-3 ${copiedToken === kycData.kyc.token.token
+                                    ? 'text-green-600'
+                                    : 'text-gray-400'
+                                  }`}
+                              />
                             </button>
                           </div>
                         ) : (
                           <span className="text-gray-400 text-sm">No token</span>
                         )}
+
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
@@ -353,17 +361,17 @@ const SavedKYCToken = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-1 text-gray-400" />
-                          {kycData.kyc?.lastUpdated 
+                          {kycData.kyc?.lastUpdated
                             ? new Date(kycData.kyc.lastUpdated).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                              })
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })
                             : 'N/A'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <button 
+                        <button
                           onClick={handleViewDetails}
                           className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
                         >
@@ -389,7 +397,7 @@ const SavedKYCToken = () => {
         </div>
       </div>
 
-      <KYCDetailModal 
+      <KYCDetailModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         kycData={selectedKyc}
