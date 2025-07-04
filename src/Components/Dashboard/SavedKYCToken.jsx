@@ -148,12 +148,12 @@ const SavedKYCToken = () => {
     setIsModalOpen(true);
   };
 
-  const kycStatus = kycData.kyc?.status
   const DocumentCard = () => {
     if (!kycData) return null;
-
+    
     const config = getStatusInfo(kycData.kyc?.status);
     const token = kycData.kyc.token?.token;
+    const kycStatus = kycData?.kyc?.status
 
     return (
       <div className={`group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border-2 ${config.borderClass} overflow-hidden`}>
@@ -321,7 +321,7 @@ const SavedKYCToken = () => {
                   <tbody className="bg-white divide-y divide-gray-100">
                     <tr className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 transition-all duration-200">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {(kycData?.kyc?.token?.token && kycStatus === "verified") ? (
+                        {(kycData?.kyc?.token?.token && kycData?.kyc?.status === "verified") ? (
                           <div className="flex items-center space-x-2">
                             <span className="font-mono overflow-x-scroll w-[150px] text-sm font-semibold text-gray-900 bg-gray-100 px-3 py-1 rounded-lg">
                               {kycData.kyc.token.token}
